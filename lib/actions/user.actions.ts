@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
 import { connectToDatabase } from "@/lib/mongodb/database";
 import User from "@/lib/mongodb/database/models/user.model";
 import { handleError } from "@/lib/utils";
