@@ -16,8 +16,6 @@ export default async function Home() {
     limit: 10,
   });
 
-  console.log(drinks)
-
   try {
     await connectToDatabase();
   } catch (error) {
@@ -26,7 +24,7 @@ export default async function Home() {
 
   return (
     <main
-      className="h-screen"
+      className="mt-[7rem]"
       // style={{
       //   backgroundImage: `url('${bgImg}')`,
       //   backgroundRepeat: "no-repeat",

@@ -7,7 +7,7 @@ const AddDrinks = () => {
   const userId = sessionClaims?.userId as string;
   return (
     <>
-      <section className="py-1 max-w-[1250px] mx-auto">
+      <section className="py-1 mt-[7rem] max-w-[1250px] mx-auto">
         <h3 className=" text-center font-extrabold bg-slate-300 rounded mx-5 p-7 text-2xl">
           Add Drink
         </h3>

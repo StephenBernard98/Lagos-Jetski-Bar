@@ -25,7 +25,7 @@ export const populateDrink = (query: any) => {
     .populate({
       path: "organizer",
       model: User,
-      select: "_id firstName lastName",
+      select: "_id username",
     })
     .populate({ path: "category", model: Category, select: "_id name" });
 };

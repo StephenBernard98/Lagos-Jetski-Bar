@@ -21,6 +21,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useRouter } from "next/navigation";
 import { CreateDrink, updateDrink } from "@/lib/actions/drink.actions";
 import { IDrink } from "@/lib/mongodb/database/models/drink.model";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type DrinkFormProps = {
   userId: string;
@@ -29,12 +31,14 @@ type DrinkFormProps = {
   drinkId?: string;
 };
 
+// const notify = () => toast("Drink Added!");
+
 const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
   const initialValues =
     drink && type === "Update"
       ? {
-        ...drink,
-        dateAdded: new Date(drink.dateAdded)
+          ...drink,
+          dateAdded: new Date(drink.dateAdded),
         }
       : drinkDefaultValues;
   const router = useRouter();
@@ -50,13 +54,24 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
         const newDrink = await CreateDrink({
           drink: { ...values },
           userId,
-          path: "/dashboard",
+          path: "/",
         });
 
         if (newDrink) {
           form.reset();
-          // router.push(`/drinks/${newDrink._id}`);
-               router.push(`/dashboard`);
+          toast.success("Drink Added!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setTimeout(() => {
+            router.push(`/`);
+          }, 1000);
         }
       } catch (error) {
         console.log(error);
@@ -73,18 +88,29 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
         const updatedDrink = await updateDrink({
           userId,
           drink: { ...values, _id: drinkId },
-          path: `/drinks/${drinkId}`,
+          path: "/",
         });
 
         if (updatedDrink) {
           form.reset();
-          router.push(`/drinks/${updatedDrink._id}`);
+          toast.success("Drink Updated!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setTimeout(() => {
+            router.push(`/`);
+          }, 1000);
         }
       } catch (error) {
         console.log(error);
       }
     }
-    console.log(values);
   }
 
   return (
@@ -100,11 +126,7 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <Input
-                    placeholder="Drink Name"
-                    {...field}
-                    className="input-field"
-                  />
+                  <Input placeholder="Drink Name" {...field} className="" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -114,7 +136,7 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
             control={form.control}
             name="categoryId"
             render={({ field }) => (
-              <FormItem className="w-full">
+              <FormItem className=" text-gray-500 w-full">
                 <FormControl>
                   <Dropdown
                     onChangeHandler={field.onChange}
@@ -134,11 +156,7 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl className="h-12">
-                  <Input
-                    placeholder="Member Name"
-                    {...field}
-                    className="input-field"
-                  />
+                  <Input placeholder="Member Name" {...field} className="" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -179,14 +197,17 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
           />
         </div>
 
-        <Button
-          type="submit"
-          size="lg"
-          disabled={form.formState.isSubmitting}
-          className="button col-span-2 w-full"
-        >
-          {form.formState.isSubmitting ? "Submitting..." : `${type} Drink `}
-        </Button>
+        <div>
+          <Button
+            type="submit"
+            size="lg"
+            disabled={form.formState.isSubmitting}
+            className="button col-span-2 w-full"
+          >
+            {form.formState.isSubmitting ? "Submitting..." : `${type} Drink `}
+          </Button>
+          <ToastContainer />
+        </div>
       </form>
     </Form>
   );

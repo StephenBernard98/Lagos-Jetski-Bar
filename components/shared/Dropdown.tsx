@@ -55,7 +55,7 @@ const Dropdown = ({ onChangeHandler, value }: DropdownProps) => {
 
   return (
     <Select onValueChange={onChangeHandler} defaultValue={value}>
-      <SelectTrigger className="select-field">
+      <SelectTrigger className="">
         <SelectValue placeholder="Category" />
       </SelectTrigger>
       <SelectContent>
@@ -63,7 +63,7 @@ const Dropdown = ({ onChangeHandler, value }: DropdownProps) => {
           categories.map((category) => (
             <SelectItem
               key={category._id}
-              className="select-item p-regular-14"
+              className=""
               value={category._id}
             >
               {category.name}
@@ -71,7 +71,7 @@ const Dropdown = ({ onChangeHandler, value }: DropdownProps) => {
           ))}
 
         <AlertDialog>
-          <AlertDialogTrigger className="p-medium-14 w-full flex rounded-sm py-3 pl-8 text-primary-500 hover:bg-pimary-50 focus:text-primary-500">
+          <AlertDialogTrigger className=" w-full flex rounded-sm py-3 pl-8 text-gray-900 hover:bg-gray-50 focus:text-gray-900">
             Add new category
           </AlertDialogTrigger>
           <AlertDialogContent className="bg-white">
@@ -80,8 +80,8 @@ const Dropdown = ({ onChangeHandler, value }: DropdownProps) => {
               <AlertDialogDescription>
                 <Input
                   type="text"
-                  placeholder="Categoty name"
-                  className="input-field m-3"
+                  placeholder="Category name"
+                  className="text-gray-900 m-3"
                   onChange={(e) => setNewCategory(e.target.value)}
                 />
               </AlertDialogDescription>

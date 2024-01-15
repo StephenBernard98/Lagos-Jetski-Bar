@@ -7,8 +7,8 @@ import NavItems from "./NavItems";
 
 const Navbar = () => {
   return (
-    <nav className="max-w-[1250px] mx-auto w-full">
-      <div className="flex justify-between mx-1 my-3 p-2 bg-slate-800 items-center">
+    <nav className="fixed top-0 left-0 w-full">
+      <div className="flex justify-between mx-1 mb-3 p-2 bg-slate-800 items-center">
         <Link href="/">
           <Image
             src="/assets/images/ljr_logo.png"

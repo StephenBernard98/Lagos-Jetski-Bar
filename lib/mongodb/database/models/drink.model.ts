@@ -9,6 +9,7 @@ export interface IDrink extends Document {
   category: { _id: string; name: string };
   organizer: {
     _id: string;
+    username: string;
     firstName: string;
     lastName: string;
   };
