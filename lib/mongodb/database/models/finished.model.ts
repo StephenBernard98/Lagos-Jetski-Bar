@@ -1,6 +1,6 @@
 import { Document, Schema, models, model } from "mongoose";
 
-export interface IDrink extends Document {
+export interface IFinishedDrink extends Document {
   _id: string;
   title: string;
   memberName?: string;
@@ -15,7 +15,7 @@ export interface IDrink extends Document {
   };
 }
 
-const DrinkSchema = new Schema({
+const FinishedDrinkSchema = new Schema({
   title: { type: String, required: true },
   memberName: { type: String },
   createdAt: { type: Date, default: Date.now },
@@ -24,6 +24,6 @@ const DrinkSchema = new Schema({
   organizer: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
-const Drink = models.Drink || model("Drink", DrinkSchema);
+const FinishedDrink = models.FinishedDrink || model("FinishedDrink", FinishedDrinkSchema);
 
-export default Drink;
+export default FinishedDrink;

@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { usePathname } from "next/navigation";
-
+import Link from "next/link";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,13 +25,15 @@ export const DeleteConfirmation = ({ drinkId }: { drinkId: string }) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-     <Button variant={'destructive'}>Delete</Button>
+        <Link href={`/drinks/${drinkId}/finished`}>
+          <Button variant={"default"}>Finish</Button>
+        </Link>
       </AlertDialogTrigger>
 
       <AlertDialogContent className="bg-white">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
-          <AlertDialogDescription className="p-regular-16 text-grey-600">
+          <AlertDialogDescription className=" text-gray-600">
             This will permanently delete this drink
           </AlertDialogDescription>
         </AlertDialogHeader>

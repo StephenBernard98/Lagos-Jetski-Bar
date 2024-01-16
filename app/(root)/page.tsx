@@ -1,44 +1,34 @@
+import CategoryFilter from "@/components/shared/CategoryFilter";
 import Collection from "@/components/shared/Collection";
+import Search from "@/components/shared/Search";
 import { getAllDrinks } from "@/lib/actions/drink.actions";
-import { connectToDatabase } from "@/lib/mongodb/database";
-import { handleError } from "@/lib/utils";
-import { User } from "@clerk/nextjs/server";
+import { SearchParamProps } from "@/types";
 
-
-export default async function Home() {
-  const bgImg = "/assets/images/ljr_home_bg.jpeg";
-  const bgImg2 = "/assets/images/sorry.png";
+export default async function Home({ searchParams }: SearchParamProps) {
+  const page = Number(searchParams?.page) || 1;
+  const searchText = (searchParams?.query as string) || "";
+  const category = (searchParams?.category as string) || "";
 
   const drinks = await getAllDrinks({
-    query: "",
-    category: "",
-    page: 1,
+    query: searchText,
+    category,
+    page,
     limit: 10,
   });
 
-  try {
-    await connectToDatabase();
-  } catch (error) {
-    handleError(error);
-  }
-
   return (
-    <main
-      className="mt-[7rem]"
-      // style={{
-      //   backgroundImage: `url('${bgImg}')`,
-      //   backgroundRepeat: "no-repeat",
-      //   backgroundSize: "cover",
-      //   objectFit: "contain",
-      // }}
-    >
+    <main className="mt-[5rem] md:mt-[7rem]">
+      <div className=" flex flex-col md:flex-row mx-2 justify-between items-center">
+        <Search />
+        <CategoryFilter />
+      </div>
       <Collection
         data={drinks?.data}
         emptyTitle="No Drinks Found"
         emptyStateSubtext="Click Add Drink to start a list"
         collectionType="All_Drinks"
-        limit={6}
-        page={1}
+        limit={10}
+        page={page}
         totalPages={drinks?.totalPages}
       />
     </main>

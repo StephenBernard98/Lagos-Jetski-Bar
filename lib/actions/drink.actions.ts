@@ -14,7 +14,9 @@ import {
   GetAllDrinksParams,
   GetAllDrinksByOwner,
   GetRelatedDrinksByCategoryParams,
+  FinishedDrinkParams,
 } from "@/types";
+import FinishedDrink from "../mongodb/database/models/finished.model";
 
 const getCategoryByName = async (name: string) => {
   return Category.findOne({ name: { $regex: name, $options: "i" } });
@@ -51,6 +53,53 @@ export async function CreateDrink({ userId, drink, path }: CreateDrinkParams) {
   }
 }
 
+// CREATE FINISHED DRINK DATABASE
+// export async function createFinishedDrink({userId, drink, path }: FinishedDrinkParams) {
+//   try {
+//     await connectToDatabase();
+
+//     const drinksFinished = await Drink.findById(drink._id);
+// if (!drinksFinished) {
+//   throw new Error("Unauthorized or drink not found");
+//     }
+
+//     const finishedDrink = await FinishedDrink.create(
+//       drink._id,
+//       { ...drink, category: drink.categoryId, organizer: userId },
+//       { new: true }
+//     );
+//     revalidatePath(path);
+
+//     return JSON.parse(JSON.stringify(finishedDrink));
+//   } catch (error) {
+//     handleError(error);
+//   }
+// }
+
+export async function createFinishedDrink({
+  userId,
+  drink,
+  path,
+}: FinishedDrinkParams) {
+  try {
+    await connectToDatabase();
+    const findDrinkById = await Drink.findById(drink._id);
+    if (!findDrinkById) {
+      throw new Error("Unauthorized or drink not found");
+    }
+
+    const finishedDrink = await FinishedDrink.create({
+      ...drink,
+      organizer: userId,
+      // {new: true}
+    });
+    revalidatePath(path);
+    return JSON.parse(JSON.stringify(finishedDrink));
+  } catch (error) {
+    handleError(error);
+  }
+}
+
 // GET ONE DRINK BY ID
 export async function getDrinkById(drinkId: string) {
   try {
@@ -67,12 +116,12 @@ export async function getDrinkById(drinkId: string) {
 }
 
 // UPDATE
-export async function updateDrink({ userId, drink, path }: UpdateDrinkParams) {
+export async function updateDrink({ drink, path }: UpdateDrinkParams) {
   try {
     await connectToDatabase();
 
     const drinkToUpdate = await Drink.findById(drink._id);
-    if (!drinkToUpdate || drinkToUpdate.organizer.toHexString() !== userId) {
+    if (!drinkToUpdate) {
       throw new Error("Unauthorized or drink not found");
     }
 
@@ -95,7 +144,11 @@ export async function deletedDrink({ drinkId, path }: DeleteDrinkParams) {
     await connectToDatabase();
 
     const deletedDrink = await Drink.findByIdAndDelete(drinkId);
-    if (deletedDrink) revalidatePath(path);
+    if (deletedDrink) {
+      setTimeout(() => {
+        revalidatePath(path);
+      }, 3000);
+    }
   } catch (error) {
     handleError(error);
   }
@@ -111,15 +164,16 @@ export async function getAllDrinks({
   try {
     await connectToDatabase();
 
-    const titleCondition = query
-      ? { title: { $regex: query, $options: "i" } }
+    const nameCondition = query
+      ? { memberName: { $regex: query, $options: "i" } }
       : {};
+
     const categoryCondition = category
       ? await getCategoryByName(category)
       : null;
     const conditions = {
       $and: [
-        titleCondition,
+        nameCondition,
         categoryCondition ? { category: categoryCondition._id } : {},
       ],
     };
@@ -171,7 +225,7 @@ export async function getDrinksByOwner({
   }
 }
 
-// GET RELATED DINK: DRINK WITH SAME CATEGORY
+// GET RELATED DRINK: DRINK WITH SAME CATEGORY
 export async function getRelatedDinksByCategory({
   categoryId,
   drinkId,

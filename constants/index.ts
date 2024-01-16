@@ -4,6 +4,11 @@ export const navLinks = [
     route: "/",
   },
   {
+    label: "Finished Drinks",
+    route: "/finishedDrinks",
+  },
+
+  {
     label: "Add Drink",
     route: "/drinks/create",
   },

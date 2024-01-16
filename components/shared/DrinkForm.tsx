@@ -19,23 +19,28 @@ import Image from "next/image";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useRouter } from "next/navigation";
-import { CreateDrink, updateDrink } from "@/lib/actions/drink.actions";
+import {
+  CreateDrink,
+  updateDrink,
+  createFinishedDrink,
+} from "@/lib/actions/drink.actions";
 import { IDrink } from "@/lib/mongodb/database/models/drink.model";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { deletedDrink } from "@/lib/actions/drink.actions";
+import { usePathname } from "next/navigation";
 
 type DrinkFormProps = {
   userId: string;
-  type: "Add" | "Update";
+  type: "Add" | "Update" | "Clear";
   drink?: IDrink;
   drinkId?: string;
 };
 
-// const notify = () => toast("Drink Added!");
-
 const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
+  const pathname = usePathname();
   const initialValues =
-    drink && type === "Update"
+    drink && (type === "Update" || type === "Clear")
       ? {
           ...drink,
           dateAdded: new Date(drink.dateAdded),
@@ -106,6 +111,41 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
           setTimeout(() => {
             router.push(`/`);
           }, 1000);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (type === "Clear") {
+      if (!drinkId) {
+        router.back();
+        return;
+      }
+
+      try {
+        const finishedDrink = await createFinishedDrink({
+          userId,
+          drink: { ...values, _id: drinkId, organizer: userId },
+          path: "/finishedDrinks",
+        });
+
+        if (finishedDrink) {
+          form.reset();
+          toast.success("Drink Cleared!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setTimeout(() => {
+            router.push(`/finishedDrinks`);
+          }, 1000);
+          await deletedDrink({ drinkId, path: pathname });
         }
       } catch (error) {
         console.log(error);

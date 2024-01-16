@@ -1,15 +1,14 @@
 import { IDrink } from "@/lib/mongodb/database/models/drink.model";
 import { formatDateTime } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
-// import Pagination from "./Pagination";
+import Pagination from "./Pagination";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-// import { DeleteConfirmation } from "./DeleteConfirmation";
 
 const DeleteConfirmation = dynamic(() => import("./DeleteConfirmation"), {
-  ssr: false, // Set ssr to false to disable server-side rendering
+  ssr: false,
 });
 
 type CollectionProps = {
@@ -29,7 +28,6 @@ const Collection = ({
   emptyStateSubtext,
   page,
   totalPages = 0,
-  collectionType,
   urlParamName,
 }: CollectionProps) => {
   const { sessionClaims } = auth();
@@ -78,9 +76,10 @@ const Collection = ({
                       </Link>
                     </td>
                     <td className="max-w-[80px] py-4">
-                      <DeleteConfirmation
-                        drinkId={drink._id}
-                      />
+                      <DeleteConfirmation drinkId={drink._id} />
+                      {/* <Link href={`/drinks/${drink._id}/finished`}>
+                        <Button variant={"default"}>Finish</Button>
+                      </Link> */}
                     </td>
                   </tr>
                 ))}
@@ -88,13 +87,13 @@ const Collection = ({
             </table>
           </section>
 
-          {/* {totalPages > 1 && (
-            // <Pagination
-            //   urlParamName={urlParamName}
-            //   page={page}
-            //   totalPages={totalPages}
-            // />
-          )} */}
+          {totalPages > 1 && (
+            <Pagination
+              urlParamName={urlParamName}
+              page={page}
+              totalPages={totalPages}
+            />
+          )}
         </div>
       ) : (
         <div className="flex justify-center min-h-[200px] flex-col gap-3 rounded-[14px] bg-gray-200 py-10 max-w-[1000px] mx-auto items-center">

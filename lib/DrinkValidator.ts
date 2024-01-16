@@ -6,8 +6,8 @@ export const drinkFormSchema = z.object({
   }),
   memberName: z
     .string()
-    .min(5, {
-      message: " Member Name must be at least 5 characters.",
+    .min(3, {
+      message: " Member Name must be at least 3 characters.",
     })
     .max(400, {
       message: " Member Name must be less than 400 characters.",

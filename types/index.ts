@@ -36,6 +36,18 @@ export type UpdateDrinkParams = {
   path: string;
 };
 
+export type FinishedDrinkParams = {
+  userId: string;
+  drink: {
+    _id: string;
+    title: string;
+    memberName: string;
+    categoryId: string;
+    organizer: string;
+  };
+  path: string;
+};
+
 export type DeleteDrinkParams = {
   drinkId: string;
   path: string;
@@ -79,34 +91,6 @@ export type Drinks = {
 // ====== CATEGORY PARAMS
 export type CreateCategoryParams = {
   categoryName: string;
-};
-
-// ====== ORDER PARAMS
-export type CheckoutOrderParams = {
-  drinkTitle: string;
-  drinkId: string;
-  price: string;
-  isFree: boolean;
-  buyerId: string;
-};
-
-export type CreateOrderParams = {
-  stripeId: string;
-  drinkId: string;
-  buyerId: string;
-  totalAmount: string;
-  createdAt: Date;
-};
-
-export type GetOrdersByEventParams = {
-  drinkId: string;
-  searchString: string;
-};
-
-export type GetOrdersByUserParams = {
-  userId: string | null;
-  limit?: number;
-  page: string | number | null;
 };
 
 // ====== URL QUERY PARAMS

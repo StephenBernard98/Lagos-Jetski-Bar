@@ -7,7 +7,7 @@ import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const Search = ({
-  placeholder = "Search title...",
+  placeholder = "search member name...",
 }: {
   placeholder?: string;
 }) => {
@@ -39,7 +39,7 @@ const Search = ({
   }, [query, searchParams, router]);
 
   return (
-    <div className="flex-center min-h-[54px] w-full overflow-hidden rounded-full bg-grey-50 px-6 py-2 my-5">
+    <div className="flex justify-center min-h-[20px] border-2 w-full overflow-hidden rounded-full bg-gray-50 mx--3 px-6 py-2 my-5">
       <Image
         src="/assets/icons/search.svg"
         alt="search"
@@ -50,7 +50,7 @@ const Search = ({
         type="text"
         placeholder={placeholder}
         onChange={(e) => setQuery(e.target.value)}
-        className="p-regular-16 border-0 bg-grey-50 outline-offset-0 placeholder:text-grey-500 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+        className=" border-0 bg-gray-50 outline-offset-0 placeholder:text-gray-500 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
       />
     </div>
   );
