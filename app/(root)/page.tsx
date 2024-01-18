@@ -15,6 +15,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
     page,
     limit: 10,
   });
+  
 
   return (
     <main className="mt-[5rem] md:mt-[7rem]">

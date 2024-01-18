@@ -1,14 +1,13 @@
-import { IDrink } from "@/lib/mongodb/database/models/drink.model";
 import { formatDateTime } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
 import Pagination from "./Pagination";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { IFinishedDrink } from "@/lib/mongodb/database/models/finished.model";
 
-
-type CollectionProps = {
-  data: IDrink[];
+type TableProps = {
+  data: IFinishedDrink[];
   emptyTitle: string;
   emptyStateSubtext: string;
   limit: number;
@@ -18,14 +17,14 @@ type CollectionProps = {
   collectionType?: "Drinks_Added" | "All_Drinks";
 };
 
-const Collection = ({
+const Table = ({
   data,
   emptyTitle,
   emptyStateSubtext,
   page,
   totalPages = 0,
   urlParamName,
-}: CollectionProps) => {
+}: TableProps) => {
   const { sessionClaims } = auth();
   const userId = sessionClaims?.userId as string;
 
@@ -68,12 +67,7 @@ const Collection = ({
                     </td>
                     <td className="min-w-[100px] py-4">
                       <Link href={`/drinks/${drink._id}/update`}>
-                        <Button variant={"outline"}>Edit</Button>
-                      </Link>
-                    </td>
-                    <td className="max-w-[80px] py-4">
-                      <Link href={`/drinks/${drink._id}/finished`}>
-                        <Button variant={"default"}>Finish</Button>
+                        <Button variant={"default"}>Restore</Button>
                       </Link>
                     </td>
                   </tr>
@@ -106,4 +100,4 @@ const Collection = ({
   );
 };
 
-export default Collection;
+export default Table;

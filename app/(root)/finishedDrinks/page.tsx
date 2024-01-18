@@ -1,11 +1,38 @@
-import React from 'react'
+import { SearchParamProps } from "@/types";
+import Search from "@/components/shared/Search";
+import Table from "@/components/shared/Table"
+import { getAllFinishedDrinks } from "@/lib/actions/drink.actions";
+import CategoryFilter from "@/components/shared/CategoryFilter";
 
-const FinishedDrinks = () => {
+const AllFinishedDrinks = async ({ searchParams }: SearchParamProps) => {
+  const page = Number(searchParams?.page) || 1;
+  const searchText = (searchParams?.query as string) || "";
+  const category = (searchParams?.category as string) || "";
+
+  const drinks = await getAllFinishedDrinks({
+    query: searchText,
+    category,
+    page,
+    limit: 10,
+  });
+
   return (
-    <div className='mt-[7rem]'>
-      Finished Drink
+    <div className="mt-[7rem]">
+      <div className=" flex flex-col md:flex-row mx-2 justify-between items-center">
+        <Search />
+        <CategoryFilter />
+      </div>
+      <Table
+        data={drinks?.data}
+        emptyTitle="No Drinks Found"
+        emptyStateSubtext="Click Add Drink to start a list"
+        collectionType="All_Drinks"
+        limit={10}
+        page={page}
+        totalPages={drinks?.totalPages}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default FinishedDrinks
+export default AllFinishedDrinks;

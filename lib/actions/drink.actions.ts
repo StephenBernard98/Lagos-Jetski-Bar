@@ -54,28 +54,6 @@ export async function CreateDrink({ userId, drink, path }: CreateDrinkParams) {
 }
 
 // CREATE FINISHED DRINK DATABASE
-// export async function createFinishedDrink({userId, drink, path }: FinishedDrinkParams) {
-//   try {
-//     await connectToDatabase();
-
-//     const drinksFinished = await Drink.findById(drink._id);
-// if (!drinksFinished) {
-//   throw new Error("Unauthorized or drink not found");
-//     }
-
-//     const finishedDrink = await FinishedDrink.create(
-//       drink._id,
-//       { ...drink, category: drink.categoryId, organizer: userId },
-//       { new: true }
-//     );
-//     revalidatePath(path);
-
-//     return JSON.parse(JSON.stringify(finishedDrink));
-//   } catch (error) {
-//     handleError(error);
-//   }
-// }
-
 export async function createFinishedDrink({
   userId,
   drink,
@@ -90,8 +68,8 @@ export async function createFinishedDrink({
 
     const finishedDrink = await FinishedDrink.create({
       ...drink,
+      category: drink.categoryId,
       organizer: userId,
-      // {new: true}
     });
     revalidatePath(path);
     return JSON.parse(JSON.stringify(finishedDrink));
@@ -99,6 +77,51 @@ export async function createFinishedDrink({
     handleError(error);
   }
 }
+
+
+// GET ALL FINISHED DRINKS
+export async function getAllFinishedDrinks({
+  query,
+  limit = 6,
+  page,
+  category,
+}: GetAllDrinksParams) {
+  try {
+    await connectToDatabase();
+
+    const nameCondition = query
+      ? { memberName: { $regex: query, $options: "i" } }
+      : {};
+
+    const categoryCondition = category
+      ? await getCategoryByName(category)
+      : null;
+    const conditions = {
+      $and: [
+        nameCondition,
+        categoryCondition ? { category: categoryCondition._id } : {},
+      ],
+    };
+
+    const skipAmount = (Number(page) - 1) * limit;
+    const drinksQuery = FinishedDrink.find(conditions)
+      .sort({ createdAt: "desc" })
+      .skip(skipAmount)
+      .limit(limit);
+
+    const drinks = await populateDrink(drinksQuery);
+    const drinksCount = await FinishedDrink.countDocuments(conditions);
+
+    return {
+      data: JSON.parse(JSON.stringify(drinks)),
+      totalPages: Math.ceil(drinksCount / limit),
+    };
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+
 
 // GET ONE DRINK BY ID
 export async function getDrinkById(drinkId: string) {
