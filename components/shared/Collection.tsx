@@ -1,11 +1,10 @@
 import { IDrink } from "@/lib/mongodb/database/models/drink.model";
 import { formatDateTime } from "@/lib/utils";
-import { auth } from "@clerk/nextjs";
 import Pagination from "./Pagination";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
-
+import { auth } from "@clerk/nextjs";
 
 type CollectionProps = {
   data: IDrink[];
@@ -15,7 +14,6 @@ type CollectionProps = {
   page: number | string;
   totalPages?: number;
   urlParamName?: string;
-  collectionType?: "Drinks_Added" | "All_Drinks";
 };
 
 const Collection = ({
@@ -67,9 +65,11 @@ const Collection = ({
                       {formatDateTime(drink.createdAt).dateTime}
                     </td>
                     <td className="min-w-[100px] py-4">
-                      <Link href={`/drinks/${drink._id}/update`}>
-                        <Button variant={"outline"}>Edit</Button>
-                      </Link>
+                      {userId && userId === drink.organizer?._id && (
+                        <Link href={`/drinks/${drink._id}/update`}>
+                          <Button variant={"outline"}>Edit</Button>
+                        </Link>
+                      )}
                     </td>
                     <td className="max-w-[80px] py-4">
                       <Link href={`/drinks/${drink._id}/finished`}>
@@ -91,12 +91,13 @@ const Collection = ({
           )}
         </div>
       ) : (
-        <div className="flex justify-center min-h-[200px] flex-col gap-3 rounded-[14px] bg-gray-200 py-10 max-w-[1000px] mx-auto items-center">
+        <div className="flex justify-center min-h-[200px] flex-col gap-7 rounded bg-gray-200 py-10 lg:max-w-[1000px] my-5 lg:mx-auto mx-2 items-center">
           <Image
             src="/assets/images/sorry.png"
             alt="no-list"
             width={230}
             height={230}
+            className="mt-28 md:mt-10"
           />
           <h3 className="text-xl md:font-bold">{emptyTitle}</h3>
           <p className="text-lg font-semibold">{emptyStateSubtext}</p>

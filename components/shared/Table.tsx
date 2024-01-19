@@ -90,7 +90,8 @@ const Table = ({
             src="/assets/images/sorry.png"
             alt="no-list"
             width={230}
-            height={230}
+              height={230}
+              className=" mt-20 md:mt-10"
           />
           <h3 className="text-xl md:font-bold">{emptyTitle}</h3>
           <p className="text-lg font-semibold">{emptyStateSubtext}</p>
