@@ -49,7 +49,7 @@ export type FinishedDrinkParams = {
 };
 
 export type DeleteDrinkParams = {
-  drinkId: string;
+  drinkId: string | undefined;
   path: string;
 };
 

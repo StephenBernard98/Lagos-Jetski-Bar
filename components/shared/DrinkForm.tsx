@@ -23,6 +23,7 @@ import {
   CreateDrink,
   updateDrink,
   createFinishedDrink,
+  removeFinishedDrink,
 } from "@/lib/actions/drink.actions";
 import { IDrink } from "@/lib/mongodb/database/models/drink.model";
 import { ToastContainer, toast } from "react-toastify";
@@ -32,7 +33,7 @@ import { usePathname } from "next/navigation";
 
 type DrinkFormProps = {
   userId: string;
-  type: "Add" | "Update" | "Clear";
+  type: "Add" | "Update" | "Remove" | "Restore";
   drink?: IDrink;
   drinkId?: string;
 };
@@ -40,7 +41,7 @@ type DrinkFormProps = {
 const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
   const pathname = usePathname();
   const initialValues =
-    drink && (type === "Update" || type === "Clear")
+    drink && (type === "Update" || type === "Remove" || type === "Restore")
       ? {
           ...drink,
           dateAdded: new Date(drink.dateAdded),
@@ -83,6 +84,36 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
       }
     }
 
+    if (type === "Restore") {
+      try {
+        const newDrink = await CreateDrink({
+          drink: { ...values },
+          userId,
+          path: "/",
+        });
+
+        if (newDrink) {
+          form.reset();
+          toast.success("Drink Restored!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setTimeout(() => {
+            router.push(`/`);
+          }, 1000);
+          await removeFinishedDrink({ drinkId, path: pathname });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     if (type === "Update") {
       if (!drinkId) {
         router.back();
@@ -117,7 +148,7 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
       }
     }
 
-    if (type === "Clear") {
+    if (type === "Remove") {
       if (!drinkId) {
         router.back();
         return;
@@ -132,7 +163,7 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
 
         if (finishedDrink) {
           form.reset();
-          toast.success("Drink Cleared!", {
+          toast.success("Drink Removed!", {
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,

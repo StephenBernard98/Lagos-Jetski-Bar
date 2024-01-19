@@ -1,29 +1,28 @@
 import DrinkForm from "@/components/shared/DrinkForm";
-import { getDrinkById } from "@/lib/actions/drink.actions";
+import { getFinishedDrinkById } from "@/lib/actions/drink.actions";
 import { auth } from "@clerk/nextjs";
 
-type UpdateDrinkProps = {
+type RestoreDrinkProps = {
   params: {
     id: string;
   };
 };
 
-const FinishedDrink = async ({ params: { id } }: UpdateDrinkProps) => {
+const RestoreDrinks = async ({ params: { id } }: RestoreDrinkProps) => {
   const { sessionClaims } = auth();
   const userId = sessionClaims?.userId as string;
-    const drink = await getDrinkById(id);
-
+  const drink = await getFinishedDrinkById(id);
   return (
     <>
       <section className="py-1">
         <h3 className=" text-center mt-[7rem] font-extrabold bg-slate-300 rounded p-7 mx-3 text-2xl">
-          Finished Drink
+          Restore Drink
         </h3>
       </section>
       <div className="wrapper my-8 ">
         <DrinkForm
           userId={userId}
-          type="Remove"
+          type="Restore"
           drink={drink}
           drinkId={drink._id}
         />
@@ -32,4 +31,4 @@ const FinishedDrink = async ({ params: { id } }: UpdateDrinkProps) => {
   );
 };
 
-export default FinishedDrink;
+export default RestoreDrinks;

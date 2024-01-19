@@ -31,7 +31,7 @@ const Table = ({
   return (
     <div>
       {data.length > 0 ? (
-        <div className="flex flex-col items-center mt-3 ml-[35rem] mr-14 md:ml-[22rem] md:mr-14 lg:mx-1 gap-3">
+        <div className="flex flex-col mt-[16rem] md:mt-[12rem]  items-center ml-[32rem] mr-14 md:ml-[22rem] md:mr-14 lg:mx-1 gap-3">
           <section className="overflow-x-auto">
             <table className="w-full border-collapse border-t">
               <thead>
@@ -66,7 +66,7 @@ const Table = ({
                       {formatDateTime(drink.createdAt).dateTime}
                     </td>
                     <td className="min-w-[100px] py-4">
-                      <Link href={`/drinks/${drink._id}/update`}>
+                      <Link href={`/drinks/${drink._id}/restore`}>
                         <Button variant={"default"}>Restore</Button>
                       </Link>
                     </td>
@@ -85,7 +85,7 @@ const Table = ({
           )}
         </div>
       ) : (
-        <div className="flex justify-center min-h-[200px] flex-col gap-3 rounded-[14px] bg-gray-200 py-10 max-w-[1000px] mx-auto items-center">
+        <div className="flex justify-center min-h-[200px] mt-[15.5rem] md:mt-[11rem] flex-col gap-3 rounded-[14px] bg-gray-200 py-10 max-w-[1000px] mx-3 mb-3 lg:mx-auto items-center">
           <Image
             src="/assets/images/sorry.png"
             alt="no-list"

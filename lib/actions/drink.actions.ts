@@ -78,7 +78,6 @@ export async function createFinishedDrink({
   }
 }
 
-
 // GET ALL FINISHED DRINKS
 export async function getAllFinishedDrinks({
   query,
@@ -121,7 +120,45 @@ export async function getAllFinishedDrinks({
   }
 }
 
+//RRESTORE A FINISHED DRINK
+export async function restoreFinishedDrink({
+  drink,
+  path,
+}: FinishedDrinkParams) {
+  try {
+    await connectToDatabase();
+    const drinkToBeRestored = await FinishedDrink.findById(drink._id);
 
+    if (!drinkToBeRestored) throw new Error("No such finished drink exists.");
+    const restoreDrink = await FinishedDrink.findByIdAndUpdate(
+      drink._id,
+      { ...drink, category: drink.categoryId },
+      { new: true }
+    );
+    setTimeout(() => {
+      revalidatePath(path);
+    }, 3000);
+
+    return JSON.parse(JSON.stringify(restoreDrink));
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+//GET A FINISHED DRINK BY ID
+export async function getFinishedDrinkById(drinkId: string) {
+  try {
+    await connectToDatabase();
+
+    const finishedDrink = await populateDrink(FinishedDrink.findById(drinkId));
+
+    if (!finishedDrink) throw new Error("Drink not found");
+
+    return JSON.parse(JSON.stringify(finishedDrink));
+  } catch (error) {
+    handleError(error);
+  }
+}
 
 // GET ONE DRINK BY ID
 export async function getDrinkById(drinkId: string) {
@@ -168,6 +205,25 @@ export async function deletedDrink({ drinkId, path }: DeleteDrinkParams) {
 
     const deletedDrink = await Drink.findByIdAndDelete(drinkId);
     if (deletedDrink) {
+      setTimeout(() => {
+        revalidatePath(path);
+      }, 3000);
+    }
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+// REMOVE A FINISHED DRINK
+export async function removeFinishedDrink({
+  drinkId,
+  path,
+}: DeleteDrinkParams) {
+  try {
+    await connectToDatabase();
+
+    const removeFinishedDrink = await FinishedDrink.findByIdAndDelete(drinkId);
+    if (removeFinishedDrink) {
       setTimeout(() => {
         revalidatePath(path);
       }, 3000);

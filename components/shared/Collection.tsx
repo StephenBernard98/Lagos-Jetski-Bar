@@ -32,7 +32,7 @@ const Collection = ({
   return (
     <div>
       {data.length > 0 ? (
-        <div className="flex flex-col items-center mt-3 ml-[35rem] mr-14 md:ml-[22rem] md:mr-14 lg:mx-1 gap-3">
+        <div className="flex flex-col mt-[16rem] md:mt-[12rem] items-center ml-[33.5rem] mr-14 md:ml-[22rem] md:mr-14 lg:mx-1 gap-3">
           <section className="overflow-x-auto">
             <table className="w-full border-collapse border-t">
               <thead>

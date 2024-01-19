@@ -39,7 +39,7 @@ const Search = ({
   }, [query, searchParams, router]);
 
   return (
-    <div className="flex justify-center min-h-[20px] border-2 w-full overflow-hidden rounded-full bg-gray-50 mx--3 px-6 py-2 my-5">
+    <div className="flex justify-center min-h-[20px] border-2 w-full overflow-hidden rounded-full bg-gray-50 mx-3 px-6 py-2 my-5">
       <Image
         src="/assets/icons/search.svg"
         alt="search"
