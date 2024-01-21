@@ -63,7 +63,7 @@ const Table = ({
                       {drink.organizer.username}
                     </td>
                     <td className="min-w-[150px] ml-5 py-4">
-                      {formatDateTime(drink.createdAt).dateTime}
+                      {formatDateTime(drink.dateAdded).dateTime}
                     </td>
                     <td className="min-w-[100px] py-4">
                       <Link href={`/drinks/${drink._id}/restore`}>
