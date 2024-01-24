@@ -218,6 +218,18 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl>
+                  <Input placeholder="Bar Location" {...field} className="" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="flex flex-col gap-5 md:flex-row">
@@ -261,6 +273,19 @@ const DrinkForm = ({ userId, type, drink, drinkId }: DrinkFormProps) => {
                       wrapperClassName="datePicker"
                     />
                   </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="size"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl>
+                  <Input placeholder="Drink Size" {...field} className="" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -17,8 +17,8 @@ const AllFinishedDrinks = async ({ searchParams }: SearchParamProps) => {
   });
 
   return (
-    <div className="mt-[7rem]">
-      <div className="fixed top-20 left-0 w-full bg-white flex flex-col md:flex-row mx-2 justify-between items-center">
+    <div className="mt-[5rem] md:mt-[11rem]">
+      <div className="fixed top-20 left-0 w-full bg-white flex justify-between items-center overflow-x-auto my-2">
         <Search />
         <CategoryFilter />
       </div>

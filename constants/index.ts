@@ -20,4 +20,6 @@ export const drinkDefaultValues = {
   title: "",
   memberName: "",
   categoryId: "",
+  location: "",
+  size: "",
 };

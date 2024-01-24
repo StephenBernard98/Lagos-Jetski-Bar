@@ -31,7 +31,7 @@ const Table = ({
   return (
     <div>
       {data.length > 0 ? (
-        <div className="flex flex-col mt-[16rem] md:mt-[12rem]  items-center ml-[32rem] mr-14 md:ml-[22rem] md:mr-14 lg:mx-1 gap-3">
+        <div className="flex flex-col mt-[18rem] md:mt-[12rem] items-center ml-[39rem] mr-14 md:ml-[33rem] md:mr-14 lg:mx-1 gap-3">
           <section className="overflow-x-auto">
             <table className="w-full border-collapse border-t">
               <thead>
@@ -90,8 +90,8 @@ const Table = ({
             src="/assets/images/sorry.png"
             alt="no-list"
             width={230}
-              height={230}
-              className=" mt-20 md:mt-10"
+            height={230}
+            className=" mt-20 md:mt-10"
           />
           <h3 className="text-xl md:font-bold">{emptyTitle}</h3>
           <p className="text-lg font-semibold">{emptyStateSubtext}</p>

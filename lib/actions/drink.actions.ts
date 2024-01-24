@@ -6,7 +6,6 @@ import Drink from "@/lib/mongodb/database/models/drink.model";
 import User from "@/lib/mongodb/database/models/user.model";
 import Category from "@/lib/mongodb/database/models/category.model";
 import { handleError } from "@/lib/utils";
-
 import {
   CreateDrinkParams,
   UpdateDrinkParams,
@@ -15,6 +14,7 @@ import {
   GetAllDrinksByOwner,
   GetRelatedDrinksByCategoryParams,
   FinishedDrinkParams,
+  GetAllFinishedDrinksParams,
 } from "@/types";
 import FinishedDrink from "../mongodb/database/models/finished.model";
 
@@ -29,12 +29,12 @@ export const populateDrink = (query: any) => {
       model: User,
       select: "_id username",
     })
-    .populate({ path: "category", model: Category, select: "_id name" });
+    .populate({ path: "category", model: Category, select: "_id name" })
 };
 
 // CREATE
 export async function CreateDrink({ userId, drink, path }: CreateDrinkParams) {
-  try {
+  try {  
     await connectToDatabase();
 
     const organizer = await User.findById(userId);
@@ -84,7 +84,7 @@ export async function getAllFinishedDrinks({
   limit = 6,
   page,
   category,
-}: GetAllDrinksParams) {
+}: GetAllFinishedDrinksParams) {
   try {
     await connectToDatabase();
 
@@ -120,7 +120,7 @@ export async function getAllFinishedDrinks({
   }
 }
 
-//RRESTORE A FINISHED DRINK
+//RESTORE A FINISHED DRINK
 export async function restoreFinishedDrink({
   drink,
   path,
@@ -236,6 +236,7 @@ export async function removeFinishedDrink({
 // GET ALL DRINKS
 export async function getAllDrinks({
   query,
+  drinkQuery,
   limit = 6,
   page,
   category,
@@ -247,12 +248,18 @@ export async function getAllDrinks({
       ? { memberName: { $regex: query, $options: "i" } }
       : {};
 
+    const drinkNameCondition = drinkQuery
+      ? { location: { $regex: drinkQuery, $options: "i" } }
+      : {};
+    
     const categoryCondition = category
       ? await getCategoryByName(category)
       : null;
+
     const conditions = {
       $and: [
         nameCondition,
+        drinkNameCondition,
         categoryCondition ? { category: categoryCondition._id } : {},
       ],
     };

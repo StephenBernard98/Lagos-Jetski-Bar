@@ -6,12 +6,12 @@ import { Input } from "../ui/input";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const Search = ({
-  placeholder = "search member name...",
+const SearchDrinkLocation = ({
+  placeholder = "search drink location...",
 }: {
   placeholder?: string;
 }) => {
-  const [query, setQuery] = useState("");
+  const [drinkQuery, setDrinkQuery] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -19,16 +19,16 @@ const Search = ({
     const delayDebounceFn = setTimeout(() => {
       let newUrl = "";
 
-      if (query) {
+      if (drinkQuery) {
         newUrl = formUrlQuery({
           params: searchParams.toString(),
-          key: "query",
-          value: query,
+          key: "drinkQuery",
+          value: drinkQuery,
         });
       } else {
         newUrl = removeKeysFromQuery({
           params: searchParams.toString(),
-          keysToRemove: ["query"],
+          keysToRemove: ["drinkQuery"],
         });
       }
 
@@ -36,7 +36,7 @@ const Search = ({
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [query, searchParams, router]);
+  }, [drinkQuery, searchParams, router]);
 
   return (
     <div className="flex justify-center min-h-[20px] border-2 w-full overflow-hidden rounded-full bg-gray-50 mx-3 px-6 py-2 my-1">
@@ -49,11 +49,11 @@ const Search = ({
       <Input
         type="text"
         placeholder={placeholder}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => setDrinkQuery(e.target.value)}
         className=" border-0 bg-gray-50 outline-offset-0 placeholder:text-gray-500 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
       />
     </div>
   );
 };
 
-export default Search;
+export default SearchDrinkLocation;

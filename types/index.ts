@@ -21,6 +21,8 @@ export type CreateDrinkParams = {
     title: string;
     memberName: string;
     categoryId: string;
+    location: string;
+    size: string
   };
   path: string;
 };
@@ -32,6 +34,8 @@ export type UpdateDrinkParams = {
     title: string;
     memberName: string;
     categoryId: string;
+    location: string;
+    size: string;
   };
   path: string;
 };
@@ -44,6 +48,8 @@ export type FinishedDrinkParams = {
     memberName: string;
     categoryId: string;
     organizer: string;
+    location: string;
+    size: string;
   };
   path: string;
 };
@@ -54,6 +60,14 @@ export type DeleteDrinkParams = {
 };
 
 export type GetAllDrinksParams = {
+  query: string;
+  drinkQuery: string;
+  category: string;
+  limit: number;
+  page: number;
+};
+
+export type GetAllFinishedDrinksParams = {
   query: string;
   category: string;
   limit: number;
@@ -77,6 +91,8 @@ export type Drinks = {
   _id: string;
   title: string;
   memberName: string;
+  location: string;
+  size: string;
   staff: {
     _id: string;
     firstName: string;
