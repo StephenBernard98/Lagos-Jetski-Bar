@@ -26,24 +26,23 @@ const Collection = ({
 }: CollectionProps) => {
   const { sessionClaims } = auth();
   const userId = sessionClaims?.userId as string;
+  const isAdmin = sessionClaims?.metadata.role === "admin";
 
-const calculateTimeDifference = (date1: Date, date2: Date) => {
-  const oneMinute = 60 * 1000; // milliseconds
-  const oneHour = oneMinute * 60;
-  const oneDay = oneHour * 24;
-  const oneMonth = oneDay * 30;
+  const calculateTimeDifference = (date1: Date, date2: Date) => {
+    const oneMinute = 60 * 1000; // milliseconds
+    const oneHour = oneMinute * 60;
+    const oneDay = oneHour * 24;
+    const oneMonth = oneDay * 30;
 
-  const diffMilliseconds = Math.abs(date1.getTime() - date2.getTime());
+    const diffMilliseconds = Math.abs(date1.getTime() - date2.getTime());
 
-  const months = Math.floor(diffMilliseconds / oneMonth);
-  const days = Math.floor((diffMilliseconds % oneMonth) / oneDay);
-  const hours = Math.floor((diffMilliseconds % oneDay) / oneHour);
-  const minutes = Math.round((diffMilliseconds % oneHour) / oneMinute);
+    const months = Math.floor(diffMilliseconds / oneMonth);
+    const days = Math.floor((diffMilliseconds % oneMonth) / oneDay);
+    const hours = Math.floor((diffMilliseconds % oneDay) / oneHour);
+    const minutes = Math.round((diffMilliseconds % oneHour) / oneMinute);
 
-  return { months, days, hours, minutes };
-};
-
-
+    return { months, days, hours, minutes };
+  };
 
   return (
     <div>
@@ -66,36 +65,34 @@ const calculateTimeDifference = (date1: Date, date2: Date) => {
               </thead>
               <tbody>
                 {data.map((drink, index) => {
-              const currentDate = new Date();
-              const createdAtDate = new Date(drink.dateAdded);
-              const timeDifference = calculateTimeDifference(
-                currentDate,
-                createdAtDate
-              );
+                  const currentDate = new Date();
+                  const createdAtDate = new Date(drink.dateAdded);
+                  const timeDifference = calculateTimeDifference(
+                    currentDate,
+                    createdAtDate
+                  );
 
-              let timeAgo = "";
+                  let timeAgo = "";
 
-              if (timeDifference.months > 0) {
-                timeAgo = `${timeDifference.months} month${
-                  timeDifference.months > 1 ? "s" : ""
-                } ago`;
-              } else if (timeDifference.days > 0) {
-                timeAgo = `${timeDifference.days} day${
-                  timeDifference.days > 1 ? "s" : ""
-                } ago`;
-              } else if (timeDifference.hours > 0) {
-                timeAgo = `${timeDifference.hours} hour${
-                  timeDifference.hours > 1 ? "s" : ""
-                } ago`;
-              } else if (timeDifference.minutes === 60) {
-                timeAgo = "one hour ago";
-              } else {
-                timeAgo = `${timeDifference.minutes} minute${
-                  timeDifference.minutes > 1 ? "s" : ""
-                } ago`;
-              }
-
-
+                  if (timeDifference.months > 0) {
+                    timeAgo = `${timeDifference.months} month${
+                      timeDifference.months > 1 ? "s" : ""
+                    } ago`;
+                  } else if (timeDifference.days > 0) {
+                    timeAgo = `${timeDifference.days} day${
+                      timeDifference.days > 1 ? "s" : ""
+                    } ago`;
+                  } else if (timeDifference.hours > 0) {
+                    timeAgo = `${timeDifference.hours} hour${
+                      timeDifference.hours > 1 ? "s" : ""
+                    } ago`;
+                  } else if (timeDifference.minutes === 60) {
+                    timeAgo = "one hour ago";
+                  } else {
+                    timeAgo = `${timeDifference.minutes} minute${
+                      timeDifference.minutes > 1 ? "s" : ""
+                    } ago`;
+                  }
                   return (
                     <tr
                       key={drink._id}
@@ -125,16 +122,19 @@ const calculateTimeDifference = (date1: Date, date2: Date) => {
                         {drink.size}
                       </td>
                       <td className="min-w-[100px] py-4">
-                        {userId && userId === drink.organizer?._id && (
+                        {(userId === drink.organizer?._id || isAdmin) && (
                           <Link href={`/drinks/${drink._id}/update`}>
                             <Button variant={"outline"}>Edit</Button>
                           </Link>
                         )}
                       </td>
+
                       <td className="max-w-[80px] py-4">
-                        <Link href={`/drinks/${drink._id}/finished`}>
-                          <Button variant={"default"}>Finish</Button>
-                        </Link>
+                        {userId && (
+                          <Link href={`/drinks/${drink._id}/finished`}>
+                            <Button variant={"default"}>Finish</Button>
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   );
