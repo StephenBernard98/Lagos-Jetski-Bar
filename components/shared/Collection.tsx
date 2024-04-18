@@ -100,7 +100,7 @@ const Collection = ({
                       style={{ boxSizing: "border-box" }}
                     >
                       <td className="min-w-[70px] py-4 text-primary-500">
-                        {index + 1} {/* Adjust index to start from 1 */}
+                        {index + 1}
                       </td>
                       <td className="min-w-[200px] flex-1 py-4 pr-4">
                         {drink.title}
@@ -122,11 +122,19 @@ const Collection = ({
                         {drink.size}
                       </td>
                       <td className="min-w-[100px] py-4">
-                        {(userId === drink.organizer?._id || isAdmin) && (
-                          <Link href={`/drinks/${drink._id}/update`}>
-                            <Button variant={"outline"}>Edit</Button>
-                          </Link>
-                        )}
+                        {userId &&
+                          (userId === drink.organizer?._id || isAdmin) &&
+                          (() => {
+                            const sixMonthsAgo = new Date();
+                            sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+                            return isAdmin ||
+                              new Date(drink.dateAdded) >= sixMonthsAgo ? (
+                              <Link href={`/drinks/${drink._id}/update`}>
+                                <Button variant={"outline"}>Edit</Button>
+                              </Link>
+                            ) :
+                            null;
+                          })()}
                       </td>
 
                       <td className="max-w-[80px] py-4">
